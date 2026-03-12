@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover India - Tourism Experiences | Atmanirbhar Yatra</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #ff6b35;
+            --gold: #f7931e;
+            --amber: #ffcc44;
+            --dark: #060608;
+            --dark2: #0d0d10;
+            --dark3: #151518;
+            --dark4: #1c1c20;
+            --text-dim: #777;
+            --text-mid: #aaa;
+            --white: #f0f0f0;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--orange), var(--gold));
+            border-radius: 3px;
+        }
+
+        /* ─── NAVBAR ─── */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(6, 6, 8, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .navbar.scrolled {
+            background: rgba(6, 6, 8, 0.95);
+            padding: 0.7rem 3rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--orange);
+            text-decoration: none;
+        }
+
+        .nav-logo img {
+            width: 32px;
+            height: 32px;
+            filter: brightness(0) saturate(100%) invert(45%) sepia(76%) saturate(2468%) hue-rotate(346deg) brightness(101%) contrast(101%);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-mid);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: linear-gradient(90deg, var(--orange), var(--gold));
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--orange);
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-right a {
+            color: var(--text-mid);
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-right a:hover {
+            color: var(--orange);
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            padding: 0.6rem 1.4rem;
+            border-radius: 25px;
+            color: #fff !important;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.35);
+        }
+
+        /* ─── PROGRESS LINE (inside timeline-container) ─── */
+        .timeline-container {
+            position: relative;
+        }
+
+        .progress-line-track {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: rgba(255, 107, 53, 0.06);
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .progress-line-fill {
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(180deg, var(--orange), var(--gold), var(--amber));
+            transition: height 0.05s linear;
+            position: relative;
+            border-radius: 0 0 2px 2px;
+        }
+
+        .progress-line-fill::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 14px;
+            background: var(--orange);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--orange), 0 0 50px rgba(255, 107, 53, 0.4), 0 0 80px rgba(255, 107, 53, 0.15);
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px var(--orange), 0 0 50px rgba(255, 107, 53, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 30px var(--orange), 0 0 70px rgba(255, 107, 53, 0.5), 0 0 100px rgba(255, 107, 53, 0.2);
+            }
+        }
+
+        .line-node {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: var(--dark3);
+            border: 2px solid rgba(255, 107, 53, 0.2);
+            border-radius: 50%;
+            z-index: 51;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .line-node.lit {
+            background: var(--orange);
+            border-color: var(--orange);
+            box-shadow: 0 0 16px var(--orange), 0 0 40px rgba(255, 107, 53, 0.3);
+            transform: translateX(-50%) scale(1.3);
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: var(--dark);
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600') center/cover;
+            opacity: 0.15;
+            transform: scale(1.1);
+            animation: heroBgDrift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroBgDrift {
+            from {
+                transform: scale(1.1) translateY(0);
+            }
+
+            to {
+                transform: scale(1.15) translateY(-20px);
+            }
+        }
+
+        .hero-grain {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .hero-vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, var(--dark) 100%);
+            pointer-events: none;
+        }
+
+        /* Floating particles */
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--orange);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle linear infinite;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+
+            10% {
+                opacity: 0.6;
+            }
+
+            90% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-20vh) scale(1);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 860px;
+            padding: 20px;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.7rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 1s 0.3s forwards;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 6.5rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 28px;
+            opacity: 0;
+            animation: fadeUp 1s 0.6s forwards;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ffcc44, #ff6b35);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+            line-height: 1.7;
+            max-width: 560px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeUp 1s 0.9s forwards;
+        }
+
+        .hero-ornament {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 36px;
+            opacity: 0;
+            animation: fadeUp 1s 1.1s forwards;
+        }
+
+        .hero-ornament-line {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.4), transparent);
+        }
+
+        .hero-ornament-diamond {
+            width: 8px;
+            height: 8px;
+            background: var(--orange);
+            transform: rotate(45deg);
+            box-shadow: 0 0 12px rgba(255, 107, 53, 0.5);
+        }
+
+        .scroll-cue {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            animation: fadeUp 1s 1.4s forwards;
+        }
+
+        .scroll-cue span {
+            font-size: 0.6rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .scroll-cue-line {
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(180deg, var(--orange), transparent);
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0% {
+                transform: scaleY(0);
+                transform-origin: top;
+            }
+
+            50% {
+                transform: scaleY(1);
+                transform-origin: top;
+            }
+
+            51% {
+                transform: scaleY(1);
+                transform-origin: bottom;
+            }
+
+            100% {
+                transform: scaleY(0);
+                transform-origin: bottom;
+            }
+        }
+
+        /* ─── JOURNEY SECTIONS ─── */
+        .journey-section {
+            display: flex;
+            align-items: center;
+            min-height: 100vh;
+            padding: 140px 8%;
+            position: relative;
+            gap: 80px;
+        }
+
+        .journey-section:nth-of-type(even) {
+            flex-direction: row-reverse;
+        }
+
+        /* Ambient glow */
+        .journey-section::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .journey-section:nth-child(odd)::before {
+            right: -100px;
+            top: 20%;
+        }
+
+        .journey-section:nth-child(even)::before {
+            left: -100px;
+            bottom: 20%;
+        }
+
+        /* ─── POLAROID CLUSTER ─── */
+        .polaroid-cluster {
+            flex: 1;
+            position: relative;
+            height: 600px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .polaroid-cluster.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .polaroid {
+            position: absolute;
+            background: #fff;
+            padding: 10px 10px 38px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.5s;
+            cursor: pointer;
+        }
+
+        .polaroid::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.0), rgba(247, 147, 30, 0.15), rgba(255, 107, 53, 0.0));
+            border-radius: 4px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .polaroid:hover::before {
+            opacity: 1;
+        }
+
+        .polaroid:hover {
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 107, 53, 0.15);
+            z-index: 10 !important;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .polaroid-caption {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.8rem;
+            color: #555;
+            font-style: italic;
+        }
+
+        .polaroid-1 {
+            width: 240px;
+            height: 200px;
+            top: 0;
+            left: 20px;
+            transform: rotate(-3deg);
+            z-index: 4;
+        }
+
+        .polaroid-2 {
+            width: 240px;
+            height: 200px;
+            top: 10px;
+            right: 20px;
+            transform: rotate(4deg);
+            z-index: 3;
+        }
+
+        .polaroid-3 {
+            width: 240px;
+            height: 200px;
+            bottom: 60px;
+            left: 0;
+            transform: rotate(2deg);
+            z-index: 2;
+        }
+
+        .polaroid-4 {
+            width: 240px;
+            height: 200px;
+            bottom: 50px;
+            right: 30px;
+            transform: rotate(-5deg);
+            z-index: 1;
+        }
+
+        .journey-section:nth-child(2) .polaroid-1 {
+            transform: rotate(-4deg);
+        }
+
+        .journey-section:nth-child(2) .polaroid-2 {
+            transform: rotate(3deg);
+        }
+
+        .journey-section:nth-child(2) .polaroid-3 {
+            transform: rotate(-2deg);
+        }
+
+        .journey-section:nth-child(2) .polaroid-4 {
+            transform: rotate(5deg);
+        }
+
+        .journey-section:nth-child(3) .polaroid-1 {
+            transform: rotate(5deg);
+        }
+
+        .journey-section:nth-child(3) .polaroid-2 {
+            transform: rotate(-3deg);
+        }
+
+        .journey-section:nth-child(3) .polaroid-3 {
+            transform: rotate(4deg);
+        }
+
+        .journey-section:nth-child(3) .polaroid-4 {
+            transform: rotate(-2deg);
+        }
+
+        .journey-section:nth-child(4) .polaroid-1 {
+            transform: rotate(-2deg);
+        }
+
+        .journey-section:nth-child(4) .polaroid-2 {
+            transform: rotate(5deg);
+        }
+
+        .journey-section:nth-child(4) .polaroid-3 {
+            transform: rotate(-4deg);
+        }
+
+        .journey-section:nth-child(4) .polaroid-4 {
+            transform: rotate(3deg);
+        }
+
+        /* ─── TEXT CONTENT ─── */
+        .journey-content {
+            flex: 1;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s 0.25s ease, transform 1s 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .journey-content.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .journey-number-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .badge-num {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            box-shadow: 0 8px 28px rgba(255, 107, 53, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            animation: badgePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 28px rgba(255, 107, 53, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 8px 36px rgba(255, 107, 53, 0.6), 0 0 60px rgba(255, 107, 53, 0.15);
+            }
+        }
+
+        .badge-line {
+            width: 50px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--orange), transparent);
+        }
+
+        .journey-category {
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: 14px;
+        }
+
+        .journey-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.8rem;
+            font-weight: 600;
+            line-height: 1.08;
+            margin-bottom: 22px;
+        }
+
+        .journey-description {
+            font-size: 0.95rem;
+            line-height: 1.9;
+            color: var(--text-dim);
+            margin-bottom: 30px;
+            max-width: 480px;
+        }
+
+        .journey-highlights {
+            list-style: none;
+            margin-bottom: 38px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .journey-highlights li {
+            font-size: 0.85rem;
+            color: var(--text-mid);
+            padding-left: 22px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .journey-highlights li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 7px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--orange);
+            box-shadow: 0 0 8px rgba(255, 107, 53, 0.4);
+        }
+
+        .journey-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 32px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(4px);
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .journey-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: -1;
+        }
+
+        .journey-btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .journey-btn:hover {
+            border-color: transparent;
+            box-shadow: 0 12px 36px rgba(255, 107, 53, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .journey-btn i {
+            transition: transform 0.3s;
+        }
+
+        .journey-btn:hover i {
+            transform: translateX(4px);
+        }
+
+        /* Dividers */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 8%;
+            gap: 16px;
+        }
+
+        .section-divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.15), transparent);
+        }
+
+        .section-divider-diamond {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 107, 53, 0.3);
+            transform: rotate(45deg);
+            transition: all 0.3s;
+        }
+
+        /* bg numbers */
+        .section-bg-num {
+            position: absolute;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 25vw;
+            font-weight: 600;
+            color: rgba(255, 107, 53, 0.015);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            user-select: none;
+            line-height: 1;
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: linear-gradient(180deg, var(--dark), #040405);
+            padding: 80px 8% 40px;
+            position: relative;
+            border-top: 1px solid rgba(255, 107, 53, 0.08);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand {}
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--orange);
+            margin-bottom: 16px;
+            text-decoration: none;
+        }
+
+        .footer-logo img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) saturate(100%) invert(45%) sepia(76%) saturate(2468%) hue-rotate(346deg) brightness(101%) contrast(101%);
+        }
+
+        .footer-brand p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            max-width: 320px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: 20px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--white);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 14px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            background: var(--orange);
+            border-color: var(--orange);
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .footer-bottom p {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .back-to-top {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 28px rgba(255, 107, 53, 0.5);
+        }
+
+        /* ─── KEYFRAMES ─── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 968px) {
+            .navbar {
+                padding: 0.8rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .journey-section,
+            .journey-section:nth-child(even) {
+                flex-direction: column;
+                padding: 80px 6%;
+                gap: 50px;
+            }
+
+            .polaroid-cluster {
+                height: 420px;
+                width: 100%;
+            }
+
+            .polaroid-1,
+            .polaroid-2,
+            .polaroid-3,
+            .polaroid-4 {
+                width: 180px;
+                height: 150px;
+            }
+
+            .journey-title {
+                font-size: 2.6rem;
+            }
+
+            .journey-highlights {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-line-track {
+                display: none;
+            }
+
+            .line-node {
+                display: none;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
+            }
+
+            .journey-title {
+                font-size: 2.2rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ─── NAVBAR ─── -->
+    <header class="navbar" id="navbar">
+        <a href="/" class="nav-logo">
+            <img src="https://imgs.search.brave.com/74fX-ravJ1uhsqHAKdolWlGAERZGXR-CTAliz9V6Nvk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4x/Lmljb25maW5kZXIu/Y29tL2RhdGEvaWNv/bnMvYm9rYm9rc3Rh/cnMtMTIxLWNsYXNz/aWMtc3RvY2staWNv/bnMtMS81MTIvYWly/cGxhbmUucG5n"
+                alt="Logo">
+            Atmanirbhar Yatra
+        </a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/destinations" class="active">Destinations</a></li>
+                <li><a href="/states">Explore States</a></li>
+                <li><a href="/journal">Journal</a></li>
+            </ul>
+        </nav>
+        <div class="nav-right">
+            <a href="#"><i class="fas fa-search"></i></a>
+            <a href="#"><i class="fas fa-user"></i></a>
+            <a href="/login" class="nav-btn">Login</a>
+        </div>
+    </header>
+
+    <!-- ─── HERO ─── -->
+    <section class="hero" id="top">
+        <div class="hero-bg"></div>
+        <div class="hero-grain"></div>
+        <div class="hero-vignette"></div>
+        <div class="hero-particles" id="heroParticles"></div>
+        <div class="hero-content">
+            <p class="hero-eyebrow">Atmanirbhar Yatra · Incredible Journeys</p>
+            <h1>Discover <em>India's</em><br>Soul</h1>
+            <p>Five extraordinary experiences that capture the essence of the subcontinent — from sacred temples to
+                pristine beaches</p>
+            <div class="hero-ornament">
+                <div class="hero-ornament-line"></div>
+                <div class="hero-ornament-diamond"></div>
+                <div class="hero-ornament-line"></div>
+            </div>
+        </div>
+        <div class="scroll-cue">
+            <span>Scroll</span>
+            <div class="scroll-cue-line"></div>
+        </div>
+    </section>
+
+    <!-- ─── JOURNEY SECTIONS ─── -->
+    <div class="timeline-container">
+        <div class="progress-line-track">
+            <div class="progress-line-fill" id="progressFill"></div>
+        </div>
+        <div class="line-node" id="node-1"></div>
+        <div class="line-node" id="node-2"></div>
+        <div class="line-node" id="node-3"></div>
+        <div class="line-node" id="node-4"></div>
+        <div class="line-node" id="node-5"></div>
+
+        <!-- 1 · Culture & Spirituality -->
+        <section class="journey-section" data-index="0">
+            <span class="section-bg-num">1</span>
+            <div class="polaroid-cluster">
+                <div class="polaroid polaroid-1" style="z-index:4"><img src="/images/ganga.jpg"
+                        alt="Ganga Aarti"><span class="polaroid-caption">Ganga Aarti</span></div>
+                <div class="polaroid polaroid-2" style="z-index:3"><img src="/images/kedarnath.jpg"
+                        alt="Kedarnath Temple"><span class="polaroid-caption">Sacred Temples</span></div>
+                <div class="polaroid polaroid-3" style="z-index:2"><img src="/images/meditation.jpg"
+                        alt="Meditation"><span class="polaroid-caption">Yoga &amp; Meditation</span></div>
+                <div class="polaroid polaroid-4" style="z-index:1"><img src="/images/ghat-varanasi.jpg"
+                        alt="Varanasi Ghats"><span class="polaroid-caption">Varanasi Ghats</span></div>
+            </div>
+            <div class="journey-content">
+                <div class="journey-number-badge">
+                    <div class="badge-num">1</div>
+                    <div class="badge-line"></div>
+                </div>
+                <div class="journey-category">Sacred Journey</div>
+                <h2 class="journey-title">Culture &amp;<br>Spirituality</h2>
+                <p class="journey-description">Dive into India's spiritual heart, where ancient rituals meet the sacred
+                    Ganges. Experience timeless traditions in Varanasi, visit sacred temples, and witness ceremonies
+                    that have endured for millennia.</p>
+                <ul class="journey-highlights">
+                    <li>Sacred Ganga Aarti at sunrise</li>
+                    <li>Ancient temples &amp; meditation</li>
+                    <li>Yoga and wellness retreats</li>
+                    <li>Cultural immersion experiences</li>
+                </ul>
+                <a href="/states" class="journey-btn">Explore Sacred Places <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </section>
+
+        <div class="section-divider">
+            <div class="section-divider-line"></div>
+            <div class="section-divider-diamond"></div>
+            <div class="section-divider-line"></div>
+        </div>
+
+        <!-- 2 · Mountains & Nature -->
+        <section class="journey-section" data-index="1">
+            <span class="section-bg-num">2</span>
+            <div class="polaroid-cluster">
+                <div class="polaroid polaroid-1"><img src="/images/himalyas.jpg" alt="Himalayas"><span
+                        class="polaroid-caption">Himalayan Peaks</span></div>
+                <div class="polaroid polaroid-2"><img src="/images/darjeling.jpg" alt="Darjeeling Tea"><span
+                        class="polaroid-caption">Darjeeling Tea</span></div>
+                <div class="polaroid polaroid-3"><img src="/images/flower.jpg" alt="Valley of Flowers"><span
+                        class="polaroid-caption">Valley of Flowers</span></div>
+                <div class="polaroid polaroid-4"><img src="/images/kashmir.jpg" alt="Kashmir Meadows"><span
+                        class="polaroid-caption">Kashmir Meadows</span></div>
+            </div>
+            <div class="journey-content">
+                <div class="journey-number-badge">
+                    <div class="badge-num">2</div>
+                    <div class="badge-line"></div>
+                </div>
+                <div class="journey-category">Natural Paradise</div>
+                <h2 class="journey-title">Mountains<br>&amp; Nature</h2>
+                <p class="journey-description">Trek through the mighty Himalayas, wander through lush tea plantations,
+                    and breathe in the crisp mountain air. From Kashmir's meadows to Kerala's hill stations, nature's
+                    grandeur awaits.</p>
+                <ul class="journey-highlights">
+                    <li>Himalayan trekking adventures</li>
+                    <li>Tea garden tours in Darjeeling</li>
+                    <li>Valley of Flowers &amp; meadows</li>
+                    <li>Wildlife spotting in hills</li>
+                </ul>
+                <a href="/states" class="journey-btn">Discover Mountains <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </section>
+
+        <div class="section-divider">
+            <div class="section-divider-line"></div>
+            <div class="section-divider-diamond"></div>
+            <div class="section-divider-line"></div>
+        </div>
+
+        <!-- 3 · Heritage -->
+        <section class="journey-section" data-index="2">
+            <span class="section-bg-num">3</span>
+            <div class="polaroid-cluster">
+                <div class="polaroid polaroid-1"><img src="/images/taj-mahal.jpg" alt="Taj Mahal"><span
+                        class="polaroid-caption">Taj Mahal, Agra</span></div>
+                <div class="polaroid polaroid-2"><img src="/images/meherfort.jpg" alt="Mehrangarh Fort"><span
+                        class="polaroid-caption">Mehrangarh Fort</span></div>
+                <div class="polaroid polaroid-3"><img src="/images/city-palace.jpg" alt="City Palace"><span
+                        class="polaroid-caption">City Palace, Jaipur</span></div>
+                <div class="polaroid polaroid-4"><img src="/images/mughal-arch.jpg" alt="Mughal Architecture"><span
+                        class="polaroid-caption">Mughal Architecture</span></div>
+            </div>
+            <div class="journey-content">
+                <div class="journey-number-badge">
+                    <div class="badge-num">3</div>
+                    <div class="badge-line"></div>
+                </div>
+                <div class="journey-category">Royal Legacy</div>
+                <h2 class="journey-title">Heritage &amp;<br>Architecture</h2>
+                <p class="journey-description">Walk through centuries of history in magnificent palaces and imposing
+                    forts. Rajasthan's royal grandeur, the Taj Mahal's eternal beauty, and ancient monuments tell tales
+                    of India's glorious past.</p>
+                <ul class="journey-highlights">
+                    <li>UNESCO World Heritage sites</li>
+                    <li>Majestic palaces &amp; royal forts</li>
+                    <li>Intricate Mughal architecture</li>
+                    <li>Living history in heritage hotels</li>
+                </ul>
+                <a href="/states" class="journey-btn">Explore Heritage <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </section>
+
+        <div class="section-divider">
+            <div class="section-divider-line"></div>
+            <div class="section-divider-diamond"></div>
+            <div class="section-divider-line"></div>
+        </div>
+
+        <!-- 4 · Beaches -->
+        <section class="journey-section" data-index="3">
+            <span class="section-bg-num">4</span>
+            <div class="polaroid-cluster">
+                <div class="polaroid polaroid-1"><img src="/images/goa-coast.jpg" alt="Goa Coastline"><span
+                        class="polaroid-caption">Goa Coastline</span></div>
+                <div class="polaroid polaroid-2"><img src="/images/kerla.jpg" alt="Kerala Backwaters"><span
+                        class="polaroid-caption">Kerala Backwaters</span></div>
+                <div class="polaroid polaroid-3"><img src="/images/andman-nicobar.jpg" alt="Andaman Islands"><span
+                        class="polaroid-caption">Andaman Islands</span></div>
+                <div class="polaroid polaroid-4"><img src="/images/house-boat.jpg" alt="Houseboat Cruise"><span
+                        class="polaroid-caption">Houseboat Cruise</span></div>
+            </div>
+            <div class="journey-content">
+                <div class="journey-number-badge">
+                    <div class="badge-num">4</div>
+                    <div class="badge-line"></div>
+                </div>
+                <div class="journey-category">Coastal Bliss</div>
+                <h2 class="journey-title">Beaches &amp;<br>Coastal Charm</h2>
+                <p class="journey-description">Relax on pristine beaches stretching along miles of golden coastline.
+                    From Goa's vibrant parties to Kerala's serene backwaters and Andaman's crystal waters, find your
+                    perfect coastal escape.</p>
+                <ul class="journey-highlights">
+                    <li>Pristine beaches &amp; water sports</li>
+                    <li>Houseboat cruises in backwaters</li>
+                    <li>Seafood &amp; beach shacks</li>
+                    <li>Island hopping in Andaman</li>
+                </ul>
+                <a href="/states" class="journey-btn">Find Your Beach <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </section>
+
+        <div class="section-divider">
+            <div class="section-divider-line"></div>
+            <div class="section-divider-diamond"></div>
+            <div class="section-divider-line"></div>
+        </div>
+
+        <!-- 5 · Wildlife -->
+        <section class="journey-section" data-index="4">
+            <span class="section-bg-num">5</span>
+            <div class="polaroid-cluster">
+                <div class="polaroid polaroid-1"><img src="/images/bengal-tiger.jpg" alt="Bengal Tiger"><span
+                        class="polaroid-caption">Bengal Tiger</span></div>
+                <div class="polaroid polaroid-2"><img src="/images/elephant-safari.jpg" alt="Elephant Safari"><span
+                        class="polaroid-caption">Elephant Safari</span></div>
+                <div class="polaroid polaroid-3"><img src="/images/bird-watching.jpeg" alt="Bird Watching"><span
+                        class="polaroid-caption">Bird Watching</span></div>
+                <div class="polaroid polaroid-4"><img src="/images/jungle-treks.webp" alt="Jungle Treks"><span
+                        class="polaroid-caption">Jungle Treks</span></div>
+            </div>
+            <div class="journey-content">
+                <div class="journey-number-badge">
+                    <div class="badge-num">5</div>
+                    <div class="badge-line"></div>
+                </div>
+                <div class="journey-category">Wild Encounters</div>
+                <h2 class="journey-title">Wildlife &amp;<br>Adventure</h2>
+                <p class="journey-description">Embark on thrilling safaris to spot the majestic Bengal tiger, explore
+                    dense jungles, and encounter diverse wildlife in their natural habitat. From Jim Corbett to
+                    Ranthambore, adventure awaits.</p>
+                <ul class="journey-highlights">
+                    <li>Tiger safaris in national parks</li>
+                    <li>Elephant safaris &amp; jungle treks</li>
+                    <li>Bird watching expeditions</li>
+                    <li>River rafting &amp; adventure sports</li>
+                </ul>
+                <a href="/states" class="journey-btn">Start Adventure <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </section>
+    </div>
+
+    <!-- ─── FOOTER ─── -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="/" class="footer-logo">
+                    <img src="https://imgs.search.brave.com/74fX-ravJ1uhsqHAKdolWlGAERZGXR-CTAliz9V6Nvk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4x/Lmljb25maW5kZXIu/Y29tL2RhdGEvaWNv/bnMvYm9rYm9rc3Rh/cnMtMTIxLWNsYXNz/aWMtc3RvY2staWNv/bnMtMS81MTIvYWly/cGxhbmUucG5n"
+                        alt="Logo">
+                    Atmanirbhar Yatra
+                </a>
+                <p>Your personal journey architects. We craft unforgettable travel experiences across the incredible
+                    landscape of India.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="/destinations">Destinations</a></li>
+                    <li><a href="/states">States</a></li>
+                    <li><a href="/journal">Journal</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Careers</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Atmanirbhar Yatra. All rights reserved.</p>
+            <a href="#top" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        // ─── NAVBAR SCROLL ───
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 80);
+        }, { passive: true });
+
+        // ─── HERO PARTICLES ───
+        const particleContainer = document.getElementById('heroParticles');
+        for (let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            p.style.left = Math.random() * 100 + '%';
+            p.style.width = p.style.height = (Math.random() * 3 + 1.5) + 'px';
+            p.style.animationDuration = (Math.random() * 8 + 6) + 's';
+            p.style.animationDelay = (Math.random() * 6) + 's';
+            p.style.opacity = Math.random() * 0.4 + 0.1;
+            particleContainer.appendChild(p);
+        }
+
+        // ─── SCROLL PROGRESS LINE (relative to timeline-container) ───
+        const progressFill = document.getElementById('progressFill');
+        const timelineContainer = document.querySelector('.timeline-container');
+
+        function updateProgress() {
+            const rect = timelineContainer.getBoundingClientRect();
+            const containerTop = rect.top + window.pageYOffset;
+            const containerHeight = timelineContainer.offsetHeight;
+            const scrollTop = window.pageYOffset;
+            const progress = Math.max(0, Math.min(1, (scrollTop - containerTop + window.innerHeight * 0.3) / containerHeight));
+            progressFill.style.height = (progress * 100) + '%';
+        }
+
+        // ─── SECTION NODES ───
+        const sections = document.querySelectorAll('.journey-section');
+        const nodes = [
+            document.getElementById('node-1'),
+            document.getElementById('node-2'),
+            document.getElementById('node-3'),
+            document.getElementById('node-4'),
+            document.getElementById('node-5'),
+        ];
+
+        function positionNodes() {
+            const containerTop = timelineContainer.offsetTop;
+            const containerHeight = timelineContainer.offsetHeight;
+            sections.forEach((sec, i) => {
+                if (!nodes[i]) return;
+                const secMid = sec.offsetTop - containerTop + sec.offsetHeight / 2;
+                const pct = (secMid / containerHeight) * 100;
+                nodes[i].style.top = pct + '%';
+            });
+        }
+
+        function updateNodes() {
+            const fillHeight = parseFloat(progressFill.style.height) || 0;
+            nodes.forEach((node) => {
+                if (!node) return;
+                const nodePos = parseFloat(node.style.top) || 0;
+                node.classList.toggle('lit', fillHeight >= nodePos);
+            });
+        }
+
+        // ─── REVEAL ANIMATIONS ───
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sec = entry.target;
+                    sec.querySelector('.journey-content')?.classList.add('active');
+                    sec.querySelector('.polaroid-cluster')?.classList.add('active');
+                    const polaroids = sec.querySelectorAll('.polaroid');
+                    polaroids.forEach((p, i) => {
+                        p.style.transition = `transform 0.5s cubic-bezier(0.25,0.8,0.25,1) ${i * 0.08}s, box-shadow 0.5s`;
+                    });
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+        sections.forEach(sec => observer.observe(sec));
+
+        // ─── POLAROID TILT ───
+        sections.forEach(sec => {
+            const cluster = sec.querySelector('.polaroid-cluster');
+            const polaroids = sec.querySelectorAll('.polaroid');
+            cluster?.addEventListener('mousemove', (e) => {
+                const rect = cluster.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+                const dx = (e.clientX - cx) / rect.width;
+                const dy = (e.clientY - cy) / rect.height;
+                polaroids.forEach((p, i) => {
+                    const baseRots = [-3, 4, 2, -5];
+                    const r = baseRots[i] || 0;
+                    p.style.transform = `rotate(${r}deg) rotateX(${dy * 8}deg) rotateY(${-dx * 8}deg) translateZ(${i * 4}px)`;
+                    p.style.transition = 'transform 0.15s ease';
+                });
+            });
+            cluster?.addEventListener('mouseleave', () => {
+                const baseRots = [-3, 4, 2, -5];
+                polaroids.forEach((p, i) => {
+                    p.style.transform = `rotate(${baseRots[i]}deg)`;
+                    p.style.transition = 'transform 0.5s ease';
+                });
+            });
+        });
+
+        // ─── SCROLL EVENT ───
+        window.addEventListener('scroll', () => {
+            updateProgress();
+            updateNodes();
+        }, { passive: true });
+
+        window.addEventListener('resize', () => {
+            positionNodes();
+            updateProgress();
+            updateNodes();
+        });
+
+        // Init
+        setTimeout(() => {
+            positionNodes();
+            updateProgress();
+            updateNodes();
+        }, 200);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= success ? 'Password Reset Complete!' : 'Reset Failed' %> - Atmanirbhar Yatra
+    </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 90%;
+            background: #111111;
+            border-radius: 24px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 25px 80px rgba(255, 107, 53, 0.2);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+        }
+
+        .icon {
+            font-size: 5rem;
+            margin-bottom: 30px;
+        }
+
+        .icon.success {
+            color: #34d399;
+        }
+
+        .icon.error {
+            color: #f87171;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #888;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <% if (success) { %>
+            <div class="icon success">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1>Password Reset! ✅</h1>
+            <p>
+                <%= message %>
+            </p>
+            <a href="/login" class="btn">Go to Login</a>
+            <% } else { %>
+                <div class="icon error">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <h1>Reset Failed</h1>
+                <p>
+                    <%= message %>
+                </p>
+                <a href="/forgot-password" class="btn">Try Again</a>
+                <% } %>
+    </div>
+</body>
+
+</html>

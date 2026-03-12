@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/index.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>
+    
+    <div class="logo"><img src="https://imgs.search.brave.com/74fX-ravJ1uhsqHAKdolWlGAERZGXR-CTAliz9V6Nvk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4x/Lmljb25maW5kZXIu/Y29tL2RhdGEvaWNv/bnMvYm9rYm9rc3Rh/cnMtMTIxLWNsYXNz/aWMtc3RvY2staWNv/bnMtMS81MTIvYWly/cGxhbmUucG5n" alt="Customer Care Icon">Atmanirbhar Yatra</div>
+    <nav>
+      <ul>
+        <li><a href="#">Stays</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Destinations</a></li>
+        <li><a href="#">Home</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <a href="#"><i class="fas fa-search"></i></a>
+      <a href="#"><i class="fas fa-user"></i></a>
+      
+      <a href="/login" class="btn">Login</a>
+    </div>
+  </header>
+
+  <section class="main">
+    <div class="main-content">
+      <h2>MOUNTAINS • BEACHES • CITIES</h2>
+      <h1>Your Travel Agent Is You</h1>
+      <div class="search-buttons">
+        <a href="/states" >
+
+          <button>Select Tour <i class="fas fa-search"></i></button>
+        </a>
+        <a href="states.html">
+
+          <button>Create Tour <i class="fas fa-search"></i></button>
+        </a>
+      </div>
+    </div>
+    <div class="bottom-text">
+      <p>Let's Make Your Next Holiday Amazing</p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="chat-icon">
+    <a href="#">
+      <img src="/images/support.png" alt="Customer Care Icon">
+    </a>
+  </div>
+  
+</body>
+</html>
+
+
+this is ejs code for index note that i want a black background and i want amazing images of india wait i send you the link https://vagatrip.com/storage/blogs/April2023/cover-10.jpg,
+
+https://housing.com/news/wp-content/uploads/2022/11/Famous-tourist-places-in-India-state-compressed.jpg,https://upload.wikimedia.org/wikipedia/commons/7/70/Neeulm_Valley_AJK_%28Arang_Kel%29.jpg,https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/f9/rajasthan.jpg?w=600&h=500&s=1,https://hldak.mmtcdn.com/prod-s3-hld-hpcmsadmin/holidays/images/cities/1354/SHILLONG.jpg,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyPYtMUhbFFtmWhiqjYGX79FctD5sDa072cw&s,https://timesofindia.indiatimes.com/photo/58490365.cms,https://lp-cms-production.imgix.net/image_browser/Mumbai_nightlife_S.jpg
+
+use these image to create an amazing website you know our primary idea from previous chats right
+
+design the home page for our Atmanirbhar Yatra website you know we are different in terms we provide custom tour package 
+as in we will give user free will to select which places he wants to visit i mean you designed whole frontend in last chats so you know what i mean so whole detailing of our website should be shown so that user know our usp 
+there should also be option to book custom package so that user who just want to travel custom tours can avail the service 
+it should just be the option we will make it later as of now its just the home page 
+tell me where should i insert image also as 1st page we should insert image of india to make it attractive

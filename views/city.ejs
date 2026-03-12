@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Add City</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, select, textarea { width: 100%; margin: 8px 0; padding: 8px; }
+    .place-preview { background: #d4edda; padding: 10px; margin: 10px 0; border: 1px solid #c3e6cb; }
+    .btn { padding: 8px 16px; margin-top: 10px; cursor: pointer; }
+    .btn-add { background: #007bff; color: white; border: none; }
+    .btn-submit { background: #28a745; color: white; border: none; }
+  </style>
+</head>
+<body>
+
+  <h2>Add New City</h2>
+
+  <form id="cityForm" action="/admin/city" method="POST">
+    <!-- City info -->
+    <label>City Name</label>
+    <input type="text" name="name" required>
+
+    <label>State</label>
+    <select name="stateId" required>
+      <option value="">Select State</option>
+      <% state1.forEach(state => { %>
+        <option value="<%= state._id %>"><%= state.name %></option>
+      <% }); %>
+    </select>
+
+    <label>City Code</label>
+    <input type="text" name="cityCode">
+
+    <label>Description</label>
+    <textarea name="description"></textarea>
+
+    <label>Best Time to Visit</label>
+    <input type="text" name="bestTimeToVisit">
+
+    <label>Famous For (comma-separated)</label>
+    <input type="text" name="famousFor">
+
+    <label>Climate</label>
+    <select name="climate">
+      <option value="">Select</option>
+      <option value="tropical">Tropical</option>
+      <option value="subtropical">Subtropical</option>
+      <option value="temperate">Temperate</option>
+      <option value="arid">Arid</option>
+      <option value="semi-arid">Semi-arid</option>
+      <option value="humid">Humid</option>
+      <option value="dry">Dry</option>
+    </select>
+
+    <label>Languages (comma-separated)</label>
+    <input type="text" name="languages">
+
+    <hr>
+    <h3>Add Places</h3>
+    <div id="placesContainer">
+      <label>Place Name</label>
+      <input type="text" id="placeName">
+
+      <label>Popularity Tier</label>
+      <select id="popularityTier">
+        <option value="most">Most</option>
+        <option value="mid">Mid</option>
+        <option value="least">Least</option>
+      </select>
+
+      <label>Description</label>
+      <textarea id="placeDescription"></textarea>
+
+      <label>Entry Fee</label>
+      <input type="text" id="entryFee">
+
+      <label>Timings</label>
+      <input type="text" id="timings">
+
+      <label>Best Time to Visit</label>
+      <input type="text" id="placeBestTime">
+
+      <label>Tags (comma-separated)</label>
+      <input type="text" id="tags">
+
+      <button type="button" class="btn btn-add" onclick="addPlace()">+ Add Place</button>
+    </div>
+
+    <div id="placeList"></div>
+
+    <!-- Hidden input to submit places as JSON -->
+    <input type="hidden" name="placesJson" id="placesJson">
+
+    <button type="submit" class="btn btn-submit">Submit City</button>
+  </form>
+
+  <script>
+    const placeList = [];
+    function addPlace() {
+      const name = document.getElementById('placeName').value.trim();
+      const popularityTier = document.getElementById('popularityTier').value;
+      const description = document.getElementById('placeDescription').value.trim();
+      const entryFee = document.getElementById('entryFee').value.trim();
+      const timings = document.getElementById('timings').value.trim();
+      const bestTimeToVisit = document.getElementById('placeBestTime').value.trim();
+      const tags = document.getElementById('tags').value.split(',').map(tag => tag.trim());
+
+      if (!name) return alert("Place name required.");
+
+      const place = { name, popularityTier, description, entryFee, timings, bestTimeToVisit, tags };
+      placeList.push(place);
+      updatePreview();
+      clearPlaceForm();
+    }
+
+    function updatePreview() {
+      const preview = document.getElementById('placeList');
+      preview.innerHTML = "";
+      placeList.forEach((place, i) => {
+        preview.innerHTML += `
+          <div class="place-preview">
+            <strong>${place.name}</strong> (${place.popularityTier})<br>
+            ${place.description || 'No description'}<br>
+            <em>${place.entryFee || 'Free'} | ${place.timings || 'No timings'}</em>
+          </div>
+        `;
+      });
+      document.getElementById('placesJson').value = JSON.stringify(placeList);
+    }
+
+    function clearPlaceForm() {
+      document.getElementById('placeName').value = '';
+      document.getElementById('placeDescription').value = '';
+      document.getElementById('entryFee').value = '';
+      document.getElementById('timings').value = '';
+      document.getElementById('placeBestTime').value = '';
+      document.getElementById('tags').value = '';
+    }
+  </script>
+
+</body>
+</html>

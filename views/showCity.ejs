@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Places Selector</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #2563eb;
+            --primary-blue-hover: #1d4ed8;
+            --accent-teal: #0d9488;
+            --success-green: #059669;
+            --warning-amber: #d97706;
+            --danger-red: #dc2626;
+            --dark-bg: #0f0f23;
+            --card-bg: #1a1a2e;
+            --card-hover: #16213e;
+            --border-color: #2d3748;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --text-muted: #718096;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0a0a1f 100%);
+            color: var(--text-primary);
+            padding: 20px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text-primary);
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-teal));
+            border-radius: 2px;
+        }
+
+        .city-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .city-section:hover {
+            transform: translateY(-2px);
+            background: var(--card-hover);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary-blue);
+        }
+
+        .city-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .city-checkbox {
+            margin-right: 16px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-blue);
+            cursor: pointer;
+        }
+
+        .city-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .city-name:hover {
+            color: var(--primary-blue);
+        }
+
+        .city-state {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-left: 8px;
+            font-weight: 400;
+        }
+
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .place-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .place-item:hover {
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--border-color);
+        }
+
+        /* Professional popularity styling */
+        .popularity-most {
+            border-left: 4px solid var(--success-green);
+            background: linear-gradient(90deg, rgba(5, 150, 105, 0.1) 0%, transparent 100%);
+        }
+
+        .popularity-most:hover {
+            background: linear-gradient(90deg, rgba(5, 150, 105, 0.15) 0%, transparent 100%);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+        }
+
+        .popularity-mid {
+            border-left: 4px solid var(--warning-amber);
+            background: linear-gradient(90deg, rgba(217, 119, 6, 0.1) 0%, transparent 100%);
+        }
+
+        .popularity-mid:hover {
+            background: linear-gradient(90deg, rgba(217, 119, 6, 0.15) 0%, transparent 100%);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+        }
+
+        .popularity-least {
+            border-left: 4px solid var(--primary-blue);
+            background: linear-gradient(90deg, rgba(37, 99, 235, 0.1) 0%, transparent 100%);
+        }
+
+        .popularity-least:hover {
+            background: linear-gradient(90deg, rgba(37, 99, 235, 0.15) 0%, transparent 100%);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .place-checkbox {
+            margin-right: 12px;
+            margin-top: 2px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-blue);
+            cursor: pointer;
+        }
+
+        .place-content {
+            flex: 1;
+        }
+
+        .place-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .place-name a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .place-name a:hover {
+            color: var(--primary-blue);
+        }
+
+        .place-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .place-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .popularity-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: capitalize;
+            letter-spacing: 0.025em;
+        }
+
+        .badge-most {
+            background: rgba(5, 150, 105, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(5, 150, 105, 0.3);
+        }
+
+        .badge-mid {
+            background: rgba(217, 119, 6, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(217, 119, 6, 0.3);
+        }
+
+        .badge-least {
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stars {
+            color: #fbbf24;
+            margin-right: 4px;
+            font-size: 0.9rem;
+        }
+
+        .no-places {
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 32px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px dashed var(--border-color);
+        }
+
+        .actions {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            letter-spacing: 0.025em;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-blue-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--danger-red);
+            color: white;
+            border-color: var(--danger-red);
+            transform: translateY(-2px);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-blue);
+        }
+
+        @media (max-width: 768px) {
+            .places-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .city-name {
+                font-size: 1.3rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .actions {
+                position: static;
+                margin-top: 30px;
+                justify-content: center;
+            }
+
+            .city-section {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+            
+            .city-name {
+                font-size: 1.2rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 30px;
+            }
+            
+            .place-item {
+                padding: 14px;
+            }
+            
+            .places-grid {
+                gap: 12px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Cities & Places</h1>
+        
+        <!-- Single, properly structured form -->
+        <form id="cityPlacesForm" method="post" action="/api/route">
+            <% cities.forEach(city => { %>
+                <div class="city-section">
+                    <div class="city-header">
+                        <input 
+                            type="checkbox" 
+                            class="city-checkbox" 
+                            id="city-<%= city._id %>"
+                            name="selectedCities"
+                            value="<%= city.name %>"
+                            onchange="toggleCityPlaces('<%= city._id %>')"
+                        >
+                        <label for="city-<%= city._id %>" class="city-name">
+                            <%= city.name %>
+                            <span class="city-state">
+                                <% if (city.stateId && city.stateId.name) { %>
+                                    , <%= city.stateId.name %>
+                                <% } %>
+                            </span>
+                        </label>
+                    </div>
+
+                    <% if (city.places && city.places.length > 0) { %>
+                        <div class="places-grid">
+                            <% city.places.forEach(place => { %>
+                                <div class="place-item popularity-<%= place.popularityTier %>" 
+                                     onclick="togglePlace('<%= city._id %>-<%= place._id %>')">
+                                    <input 
+                                        type="checkbox" 
+                                        class="place-checkbox city-<%= city._id %>-place" 
+                                        id="place-<%= city._id %>-<%= place._id %>"
+                                        name="selectedPlaces"
+                                        value="<%= place.name %>,<%=city.name%>"
+                                        onclick="event.stopPropagation()"
+                                    >
+                                    <div class="place-content">
+                                        <div class="place-name">
+                                            <% if (place.journalSlug) { %>
+                                                <a href="/journal/<%= place.journalSlug %>" 
+                                                   style="color: inherit; text-decoration: none;"
+                                                   onclick="event.stopPropagation()">
+                                                    <%= place.name %>
+                                                </a>
+                                            <% } else { %>
+                                                <%= place.name %>
+                                            <% } %>
+                                        </div>
+                                        
+                                        <% if (place.description) { %>
+                                            <div class="place-description">
+                                                <%= place.description.substring(0, 100) %><%= place.description.length > 100 ? '...' : '' %>
+                                            </div>
+                                        <% } %>
+                                        
+                                        <div class="place-meta">
+                                            <span class="popularity-badge badge-<%= place.popularityTier %>">
+                                                <%= place.popularityTier %> Popular
+                                            </span>
+                                            
+                                            <% if (place.averageRating > 0) { %>
+                                                <div class="rating">
+                                                    <span class="stars">★</span>
+                                                    <span><%= place.averageRating.toFixed(1) %> (<%= place.totalReviews %>)</span>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <div class="no-places">No places available for this city</div>
+                    <% } %>
+                </div>
+            <% }); %>
+
+            <div class="actions">
+                <button type="button" class="btn btn-secondary" onclick="clearAll()">Clear All</button>
+                <button type="submit" class="btn btn-primary">Submit Selection</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Toggle all places when city checkbox is changed
+        function toggleCityPlaces(cityId) {
+            const cityCheckbox = document.getElementById(`city-${cityId}`);
+            const placeCheckboxes = document.querySelectorAll(`.city-${cityId}-place`);
+            
+            placeCheckboxes.forEach(checkbox => {
+                checkbox.checked = cityCheckbox.checked;
+            });
+        }
+
+        // Toggle individual place
+        function togglePlace(placeId) {
+            const checkbox = document.getElementById(`place-${placeId}`);
+            checkbox.checked = !checkbox.checked;
+            
+            // Update city checkbox state
+            const cityId = placeId.split('-')[0];
+            updateCityCheckboxState(cityId);
+        }
+
+        // Update city checkbox state based on places
+        function updateCityCheckboxState(cityId) {
+            const cityCheckbox = document.getElementById(`city-${cityId}`);
+            const placeCheckboxes = document.querySelectorAll(`.city-${cityId}-place`);
+            
+            const checkedPlaces = Array.from(placeCheckboxes).filter(cb => cb.checked);
+            
+            if (checkedPlaces.length === 0) {
+                cityCheckbox.checked = false;
+                cityCheckbox.indeterminate = false;
+            } else if (checkedPlaces.length === placeCheckboxes.length) {
+                cityCheckbox.checked = true;
+                cityCheckbox.indeterminate = false;
+            } else {
+                cityCheckbox.checked = false;
+                cityCheckbox.indeterminate = true;
+            }
+        }
+
+        // Clear all selections
+        function clearAll() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.indeterminate = false;
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('cityPlacesForm').addEventListener('submit', function(e) {
+            const selectedCities = Array.from(document.querySelectorAll('input[name="selectedCities"]:checked'))
+                .map(cb => cb.value);
+            
+            const selectedPlaces = Array.from(document.querySelectorAll('input[name="selectedPlaces"]:checked'))
+                .map(cb => cb.value);
+            
+            console.log('Submitting - Selected Cities:', selectedCities);
+            console.log('Submitting - Selected Places:', selectedPlaces);
+        });
+
+        // Initialize city checkbox states on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cityIds = new Set();
+            document.querySelectorAll('[class*="city-"][class*="-place"]').forEach(element => {
+                const classes = element.className.split(' ');
+                const cityClass = classes.find(cls => cls.startsWith('city-') && cls.endsWith('-place'));
+                if (cityClass) {
+                    const cityId = cityClass.replace('city-', '').replace('-place', '');
+                    cityIds.add(cityId);
+                }
+            });
+            
+            cityIds.forEach(cityId => {
+                updateCityCheckboxState(cityId);
+            });
+        });
+    </script>
+</body>
+</html>

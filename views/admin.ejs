@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Atmanirbhar Yatra</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #111;
+            border-bottom: 1px solid #222;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff6b35;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: #ff6b35;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 95%;
+            margin: 40px auto;
+            background: #111;
+            border-radius: 15px;
+            border: 1px solid #222;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: #0a0a0a;
+            border-bottom: 1px solid #222;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            border-bottom-color: #ff6b35;
+            background: rgba(255, 107, 53, 0.05);
+            color: #ff6b35;
+        }
+
+        .tab:hover {
+            background: rgba(255, 107, 53, 0.03);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .message.success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #6ee7b7;
+        }
+
+        .message.error {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #ff6b6b;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #888;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #ff6b35;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-select option {
+            background: #111;
+            color: #fff;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #333;
+            color: #888;
+        }
+
+        .btn-secondary:hover {
+            border-color: #ff6b35;
+            color: #ff6b35;
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #ff6b35;
+        }
+
+        .place-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .place-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .place-name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .place-tier {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .place-details {
+            color: #888;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .remove-btn {
+            background: #dc2626;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background: #ef4444;
+        }
+
+        .full-width {
+            grid-column: 1/-1;
+        }
+
+        @media(max-width:768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .container {
+                width: 100%;
+                border-radius: 0;
+            }
+
+            .tab-content {
+                padding: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo"><i class="fas fa-plane-departure"></i>Atmanirbhar Yatra Admin</div>
+        <a href="/" style="color:#888;text-decoration:none;"><i class="fas fa-home"></i> Back to Site</a>
+    </div>
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('states')"><i class="fas fa-map"></i> Manage States</div>
+            <div class="tab" onclick="switchTab('cities')"><i class="fas fa-city"></i> Manage Cities</div>
+        </div>
+        <!-- States Tab -->
+        <div id="states-tab" class="tab-content active">
+            <% if(message){%>
+                <div class="message success">
+                    <%=message%>
+                </div>
+                <%}%>
+                    <form action="/admin/states" method="POST">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>State Name*</label>
+                                <input type="text" name="name" class="form-input" placeholder="e.g. Himachal Pradesh"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Slug*</label>
+                                <input type="text" name="slug" class="form-input" placeholder="e.g. himachal-pradesh"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Image URL</label>
+                                <input type="text" name="image" class="form-input" placeholder="https://...">
+                            </div>
+                            <div class="form-group">
+                                <label>Popularity*</label>
+                                <select name="popularity" class="form-select" required>
+                                    <option value="high">High</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Climate</label>
+                                <select name="climate" class="form-select">
+                                    <option value="moderate">Moderate</option>
+                                    <option value="hot">Hot</option>
+                                    <option value="cold">Cold</option>
+                                    <option value="varied">Varied</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Best Time to Visit</label>
+                                <input type="text" name="bestTimeToVisit" class="form-input"
+                                    placeholder="e.g. October to March">
+                            </div>
+                            <div class="form-group">
+                                <label>Recommended Duration</label>
+                                <input type="text" name="recommendedDuration" class="form-input"
+                                    placeholder="e.g. 3-5 days">
+                            </div>
+                            <div class="form-group">
+                                <label>Added By</label>
+                                <input type="text" name="addedBy" class="form-input" value="admin" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Tags (comma-separated)</label>
+                                <input type="text" name="tags" class="form-input"
+                                    placeholder="mountains,adventure,spiritual">
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Description</label>
+                                <textarea name="description" class="form-textarea"
+                                    placeholder="Brief description of the state"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Publish Now?</label>
+                                <select name="isPublished" class="form-select">
+                                    <option value="true">Yes</option>
+                                    <option value="false">No - Save as Draft</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn"><i class="fas fa-plus-circle"></i> Add State</button>
+                    </form>
+        </div>
+        <!-- Cities Tab -->
+        <div id="cities-tab" class="tab-content">
+            <form id="cityForm" action="/admin/city" method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>City Name*</label>
+                        <input type="text" name="name" class="form-input" placeholder="e.g. Shimla" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Select State*</label>
+                        <select name="stateId" class="form-select" required>
+                            <option value="">Choose state...</option>
+                            <%state1.forEach(state=>{%>
+                                <option value="<%=state._id%>">
+                                    <%=state.name%>
+                                </option>
+                                <%});%>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>City Code</label>
+                        <input type="text" name="cityCode" class="form-input" placeholder="e.g. SHM">
+                    </div>
+                    <div class="form-group">
+                        <label>Climate</label>
+                        <select name="climate" class="form-select">
+                            <option value="">Select climate</option>
+                            <option value="tropical">Tropical</option>
+                            <option value="subtropical">Subtropical</option>
+                            <option value="temperate">Temperate</option>
+                            <option value="arid">Arid</option>
+                            <option value="humid">Humid</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Best Time to Visit</label>
+                        <input type="text" name="bestTimeToVisit" class="form-input" placeholder="e.g. March to June">
+                    </div>
+                    <div class="form-group">
+                        <label>Famous For (comma-separated)</label>
+                        <input type="text" name="famousFor" class="form-input" placeholder="Mall Road,Ridge,Kufri">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Languages (comma-separated)</label>
+                        <input type="text" name="languages" class="form-input" placeholder="Hindi,English,Pahari">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Description</label>
+                        <textarea name="description" class="form-textarea" placeholder="Describe the city"></textarea>
+                    </div>
+                </div>
+                <hr style="border:1px solid #222;margin:30px 0">
+                <h3 class="section-title"><i class="fas fa-map-marker-alt"></i> Add Places in City</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Place Name</label>
+                        <input type="text" id="placeName" class="form-input" placeholder="e.g. Ridge">
+                    </div>
+                    <div class="form-group">
+                        <label>Popularity</label>
+                        <select id="popularityTier" class="form-select">
+                            <option value="most">Most Popular</option>
+                            <option value="mid">Mid Popular</option>
+                            <option value="least">Least Popular</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Entry Fee</label>
+                        <input type="text" id="entryFee" class="form-input" placeholder="Free / ₹50">
+                    </div>
+                    <div class="form-group">
+                        <label>Timings</label>
+                        <input type="text" id="timings" class="form-input" placeholder="9 AM - 6 PM">
+                    </div>
+                    <div class="form-group">
+                        <label>Best Time to Visit</label>
+                        <input type="text" id="placeBestTime" class="form-input" placeholder="All year">
+                    </div>
+                    <div class="form-group">
+                        <label>Tags (comma-separated)</label>
+                        <input type="text" id="tags" class="form-input" placeholder="scenic,shopping,heritage">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Description</label>
+                        <textarea id="placeDescription" class="form-textarea"
+                            placeholder="Describe this place"></textarea>
+                    </div>
+                </div>
+                <button type="button" class="btn-secondary btn" onclick="addPlace()"><i class="fas fa-plus"></i> Add
+                    Place to List</button>
+                <div id="placeList" style="margin-top:30px"></div>
+                <input type="hidden" name="placesJson" id="placesJson">
+                <hr style="border:1px solid #222;margin:30px 0">
+                <button type="submit" class="btn"><i class="fas fa-save"></i> Submit City</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+        }
+        const placeList = [];
+        function addPlace() {
+            const name = document.getElementById('placeName').value.trim();
+            const popularityTier = document.getElementById('popularityTier').value;
+            const description = document.getElementById('placeDescription').value.trim();
+            const entryFee = document.getElementById('entryFee').value.trim();
+            const timings = document.getElementById('timings').value.trim();
+            const bestTimeToVisit = document.getElementById('placeBestTime').value.trim();
+            const tags = document.getElementById('tags').value.split(',').map(tag => tag.trim()).filter(t => t);
+            if (!name) { alert("Place name is required"); return; }
+            const place = { name, popularityTier, description, entryFee, timings, bestTimeToVisit, tags };
+            placeList.push(place);
+            updatePreview();
+            clearPlaceForm();
+        }
+        function updatePreview() {
+            const preview = document.getElementById('placeList');
+            preview.innerHTML = '';
+            placeList.forEach((place, i) => {
+                preview.innerHTML += `
+                <div class="place-item">
+                    <div class="place-header">
+                        <span class="place-name"><i class="fas fa-map-pin"></i> ${place.name}</span>
+                        <div style="display:flex;gap:10px;align-items:center">
+                            <span class="place-tier">${place.popularityTier}</span>
+                            <button type="button" class="remove-btn" onclick="removePlace(${i})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="place-details">
+                        ${place.description || 'No description'}<br>
+                        <strong>Fee:</strong> ${place.entryFee || 'Free'} | <strong>Timings:</strong> ${place.timings || 'N/A'}
+                    </div>
+                </div>`;
+            });
+            document.getElementById('placesJson').value = JSON.stringify(placeList);
+        }
+        function removePlace(index) {
+            placeList.splice(index, 1);
+            updatePreview();
+        }
+        function clearPlaceForm() {
+            document.getElementById('placeName').value = '';
+            document.getElementById('placeDescription').value = '';
+            document.getElementById('entryFee').value = '';
+            document.getElementById('timings').value = '';
+            document.getElementById('placeBestTime').value = '';
+            document.getElementById('tags').value = '';
+        }
+    </script>
+</body>
+
+</html>

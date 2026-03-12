@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Summary - Your Journey Awaits</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e2e8f0;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #64ffda, #00bcd4, #2196f3);
+            border-radius: 2px;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #64ffda, #00bcd4, #2196f3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(100, 255, 218, 0.3);
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.8;
+            color: #94a3b8;
+            font-weight: 300;
+        }
+
+        .route-overview {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .route-overview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #64ffda, transparent);
+        }
+
+        .route-overview h2 {
+            color: #64ffda;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #64ffda, #00bcd4);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(100, 255, 218, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #64ffda;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .travel-segments {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .segment {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 35px;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .segment::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #64ffda, #00bcd4);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .segment:hover::before {
+            transform: scaleX(1);
+        }
+
+        .segment:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(100, 255, 218, 0.2);
+        }
+
+        .segment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .route-points {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .point {
+            background: rgba(100, 255, 218, 0.15);
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .point:hover {
+            background: rgba(100, 255, 218, 0.25);
+            transform: scale(1.05);
+        }
+
+        .arrow {
+            color: #64ffda;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .travel-mode {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 30px;
+            background: rgba(100, 255, 218, 0.15);
+            border-radius: 30px;
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .travel-mode:hover {
+            background: rgba(100, 255, 218, 0.25);
+            transform: scale(1.05);
+        }
+
+        .travel-icon {
+            font-size: 1.5rem;
+        }
+
+        .segment-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 25px;
+        }
+
+        .detail-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 16px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .detail-item:hover {
+            background: rgba(15, 23, 42, 0.8);
+            transform: translateY(-3px);
+        }
+
+        .detail-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #64ffda;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .no-places {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 24px;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .no-places h3 {
+            color: #64ffda;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .segment-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .route-points {
+                justify-content: center;
+            }
+            
+            .travel-mode {
+                justify-content: center;
+            }
+            
+            .overview-stats {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Travel Summary</h1>
+            <p>Your optimized journey route with smart transport recommendations</p>
+        </div>
+
+        <% if (places && places.length > 1) { %>
+            <%
+                // Function to calculate distance between two coordinates using Haversine formula
+                function calculateDistance(lat1, lng1, lat2, lng2) {
+                    const R = 6371; // Earth's radius in kilometers
+                    const dLat = (lat2 - lat1) * Math.PI / 180;
+                    const dLng = (lng2 - lng1) * Math.PI / 180;
+                    const a = 
+                        Math.sin(dLat/2) * Math.sin(dLat/2) +
+                        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                    const distance = R * c;
+                    return Math.round(distance * 10) / 10; // Round to 1 decimal place
+                }
+
+                // Function to determine travel mode based on distance
+                function getTravelMode(distance) {
+                    if (distance <= 30) return { mode: 'cab', icon: '🚗', speed: 50 };
+                    if (distance <= 100) return { mode: 'bus', icon: '🚌', speed: 60 };
+                    if (distance <= 500) return { mode: 'train', icon: '🚆', speed: 80 };
+                    return { mode: 'flight', icon: '✈️', speed: 500 };
+                }
+
+                // Function to estimate travel time
+                function estimateTime(distance, speed) {
+                    let timeInHours = distance / speed;
+                    
+                    // Add buffer time based on mode
+                    if (speed === 50) timeInHours += 0.25; // cab - 15 min buffer
+                    if (speed === 60) timeInHours += 0.5; // bus - 30 min buffer
+                    if (speed === 80) timeInHours += 1; // train - 1 hour buffer
+                    if (speed === 500) timeInHours += 2; // flight - 2 hour buffer
+                    
+                    return Math.round(timeInHours * 60); // return in minutes
+                }
+
+                // Function to format time
+                function formatTime(minutes) {
+                    if (minutes < 60) {
+                        return `${minutes} min`;
+                    } else {
+                        const hours = Math.floor(minutes / 60);
+                        const mins = minutes % 60;
+                        return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+                    }
+                }
+
+                // Function to format place name
+                function formatPlaceName(place) {
+                    if (place.name) return place.name;
+                    if (place.city) return place.city;
+                    if (place.location) return place.location;
+                    if (place.address) return place.address;
+                    return `Location (${place.lat?.toFixed(2)}, ${place.lng?.toFixed(2)})`;
+                }
+
+                // Calculate all segments data
+                let segments = [];
+                let totalDistance = 0;
+                let totalTime = 0;
+                let cabCount = 0, busCount = 0, trainCount = 0, flightCount = 0;
+
+                for (let i = 0; i < places.length - 1; i++) {
+                    const from = places[i];
+                    const to = places[i + 1];
+                    
+                    // Extract coordinates
+                    const fromLat =  places[i].coordinates[0];
+                    const fromLng =  places[i].coordinates[1];
+                    const toLat =    places[i+1].coordinates[0];
+                    const toLng =    places[i+1].coordinates[1]
+                    
+                    const distance = calculateDistance(fromLng, fromLat, toLng, toLat);
+                    const travelInfo = getTravelMode(distance);
+                    const time = estimateTime(distance, travelInfo.speed);
+                    
+                    totalDistance += distance;
+                    totalTime += time;
+                    
+                    // Count by mode
+                    if (travelInfo.mode === 'cab') cabCount++;
+                    else if (travelInfo.mode === 'bus') busCount++;
+                    else if (travelInfo.mode === 'train') trainCount++;
+                    else if (travelInfo.mode === 'flight') flightCount++;
+
+                    segments.push({
+                        from: formatPlaceName(from),
+                        to: formatPlaceName(to),
+                        distance: distance,
+                        mode: travelInfo.mode,
+                        icon: travelInfo.icon,
+                        speed: travelInfo.speed,
+                        time: time,
+                        segmentNumber: i + 1
+                    });
+                }
+            %>
+
+            <div class="route-overview">
+                <h2>Journey Overview</h2>
+                <div class="overview-stats">
+                    <div class="stat-card">
+                        <span class="stat-value"><%= totalDistance.toFixed(1) %> km</span>
+                        <div class="stat-label">Total Distance</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value"><%= formatTime(totalTime) %></span>
+                        <div class="stat-label">Estimated Time</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value"><%= segments.length %></span>
+                        <div class="stat-label">Travel Segments</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value"><%= places.length %></span>
+                        <div class="stat-label">Total Stops</div>
+                    </div>
+                </div>
+                
+                <% if (cabCount > 0 || busCount > 0 || trainCount > 0 || flightCount > 0) { %>
+                <div class="overview-stats" style="margin-top: 25px;">
+                    <% if (cabCount > 0) { %>
+                    <div class="stat-card">
+                        <span class="stat-value">🚗 <%= cabCount %></span>
+                        <div class="stat-label">Cab Rides</div>
+                    </div>
+                    <% } %>
+                    <% if (busCount > 0) { %>
+                    <div class="stat-card">
+                        <span class="stat-value">🚌 <%= busCount %></span>
+                        <div class="stat-label">Bus Rides</div>
+                    </div>
+                    <% } %>
+                    <% if (trainCount > 0) { %>
+                    <div class="stat-card">
+                        <span class="stat-value">🚆 <%= trainCount %></span>
+                        <div class="stat-label">Train Rides</div>
+                    </div>
+                    <% } %>
+                    <% if (flightCount > 0) { %>
+                    <div class="stat-card">
+                        <span class="stat-value">✈️ <%= flightCount %></span>
+                        <div class="stat-label">Flights</div>
+                    </div>
+                    <% } %>
+                </div>
+                <% } %>
+            </div>
+
+            <div class="travel-segments">
+                <% segments.forEach(function(segment, index) { %>
+                <div class="segment">
+                    <div class="segment-header">
+                        <div class="route-points">
+                            <div class="point"><%= segment.from %></div>
+                            <div class="arrow">→</div>
+                            <div class="point"><%= segment.to %></div>
+                        </div>
+                        <div class="travel-mode">
+                            <span class="travel-icon"><%= segment.icon %></span>
+                            <span><%= segment.mode.charAt(0).toUpperCase() + segment.mode.slice(1) %></span>
+                        </div>
+                    </div>
+                    <div class="segment-details">
+                        <div class="detail-item">
+                            <span class="detail-value"><%= segment.distance %> km</span>
+                            <div class="detail-label">Distance</div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-value"><%= formatTime(segment.time) %></span>
+                            <div class="detail-label">Travel Time</div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-value">Segment <%= segment.segmentNumber %></span>
+                            <div class="detail-label">of <%= segments.length %></div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-value"><%= segment.speed %> km/h</span>
+                            <div class="detail-label">Avg Speed</div>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+
+        <% } else { %>
+            <div class="no-places">
+                <h3>No Travel Route Available</h3>
+                <p>Please provide at least 2 destinations to generate your travel summary.</p>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>

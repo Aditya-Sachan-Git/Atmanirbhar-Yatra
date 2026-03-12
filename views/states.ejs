@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe Travel - Select Your Destinations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-black: #0a0a0a;
+            --secondary-black: #1a1a1a;
+            --accent-black: #2a2a2a;
+            --gold-accent: #d4af37;
+            --gold-light: #f4e4a6;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-dark: rgba(0, 0, 0, 0.5);
+            --gradient-primary: linear-gradient(135deg, #d4af37 0%, #f4e4a6 100%);
+            --gradient-dark: linear-gradient(135deg, #0a0a0a 0%, #2a2a2a 100%);
+            --climate-hot: #ff6b6b;
+            --climate-cold: #4ecdc4;
+            --climate-moderate: #45b7d1;
+            --climate-varied: #96ceb4;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-black);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundFlow 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundFlow {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            33% { transform: translateX(-20px) translateY(-10px); }
+            66% { transform: translateX(20px) translateY(10px); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: 80px 0 60px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.1; }
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        /* States Grid */
+        .states-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            padding: 40px 0;
+        }
+
+        .state-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            cursor: pointer;
+            will-change: transform;
+        }
+
+        .state-card.fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .state-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: var(--gold-accent);
+            box-shadow: 
+                0 20px 60px var(--shadow-dark),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 0 1px rgba(212, 175, 55, 0.3);
+        }
+
+        .state-card.selected {
+            border-color: var(--gold-accent);
+            box-shadow: 
+                0 16px 40px var(--shadow-dark),
+                inset 0 1px 0 rgba(212, 175, 55, 0.2),
+                0 0 0 2px rgba(212, 175, 55, 0.4);
+        }
+
+        .card-image-container {
+            position: relative;
+            overflow: hidden;
+            height: 280px;
+            background: var(--accent-black);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: brightness(0.8) contrast(1.1);
+            will-change: transform, filter;
+        }
+
+        .state-card:hover .card-image {
+            transform: scale(1.1);
+            filter: brightness(0.9) contrast(1.2);
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0.4) 0%,
+                rgba(0, 0, 0, 0.1) 50%,
+                rgba(212, 175, 55, 0.1) 100%
+            );
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .state-card:hover .image-overlay {
+            opacity: 1;
+        }
+
+        /* Checkbox Styling */
+        .checkbox-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .custom-checkbox {
+            position: relative;
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+        }
+
+        .custom-checkbox input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 32px;
+            width: 32px;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 2px solid var(--glass-border);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-checkbox:hover .checkmark {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: var(--gold-accent);
+            transform: scale(1.1);
+        }
+
+        .custom-checkbox input:checked ~ .checkmark {
+            background: var(--gradient-primary);
+            border-color: var(--gold-accent);
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            width: 6px;
+            height: 12px;
+            border: solid var(--primary-black);
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+            font-weight: bold;
+        }
+
+        .custom-checkbox input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        /* Card Content */
+        .card-content {
+            padding: 32px;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            position: relative;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .popularity-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .popularity-high {
+            background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(255, 71, 87, 0.3);
+        }
+
+        .popularity-medium {
+            background: linear-gradient(135deg, #ffa726 0%, #ff8f00 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(255, 167, 38, 0.3);
+        }
+
+        .popularity-low {
+            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(66, 165, 245, 0.3);
+        }
+
+        .climate-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: capitalize;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .climate-hot {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--climate-hot);
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .climate-cold {
+            background: rgba(78, 205, 196, 0.2);
+            color: var(--climate-cold);
+            border-color: rgba(78, 205, 196, 0.3);
+        }
+
+        .climate-moderate {
+            background: rgba(69, 183, 209, 0.2);
+            color: var(--climate-moderate);
+            border-color: rgba(69, 183, 209, 0.3);
+        }
+
+        .climate-varied {
+            background: rgba(150, 206, 180, 0.2);
+            color: var(--climate-varied);
+            border-color: rgba(150, 206, 180, 0.3);
+        }
+
+        .state-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .state-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .card-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .best-time {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .best-time-icon {
+            width: 16px;
+            height: 16px;
+            background: var(--gold-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--primary-black);
+            font-weight: bold;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.3);
+            color: var(--gold-light);
+        }
+
+        /* Selection Summary */
+        .selection-summary {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(30px);
+            padding: 24px 36px;
+            border-radius: 60px;
+            box-shadow: 
+                0 16px 40px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: none; /* Hidden by default */
+            align-items: center;
+            gap: 24px;
+            z-index: 1000;
+            border: 1px solid var(--glass-border);
+            min-width: 320px;
+            animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .selection-summary.show {
+            display: flex; /* Shown when selections are made */
+        }
+
+        .selected-count {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1rem;
+            flex: 1;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-clear {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-clear:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-proceed {
+            background: var(--gradient-primary);
+            color: var(--primary-black);
+            border: 1px solid var(--gold-accent);
+            font-weight: 700;
+        }
+
+        .btn-proceed:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-proceed:disabled {
+            background: rgba(128, 128, 128, 0.3);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Loading States */
+        .loading-shimmer {
+            background: linear-gradient(
+                90deg,
+                var(--accent-black) 25%,
+                rgba(255, 255, 255, 0.05) 50%,
+                var(--accent-black) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .card-image.loaded {
+            animation: none;
+            background: none;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* No States Message */
+        .no-states {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            margin-top: 100px;
+            font-weight: 300;
+            padding: 60px 20px;
+        }
+
+        .no-states h2 {
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            font-weight: 600;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .no-states p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .states-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px 0;
+            }
+            
+            .header {
+                padding: 60px 0 40px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header p {
+                font-size: 1.1rem;
+                padding: 0 10px;
+            }
+            
+            .selection-summary {
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                transform: none;
+                border-radius: 20px;
+                flex-direction: column;
+                gap: 16px;
+                min-width: auto;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .btn {
+                flex: 1;
+                padding: 14px 20px;
+            }
+
+            .card-header {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .tags-container {
+                margin-top: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .states-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .state-card {
+                border-radius: 16px;
+            }
+
+            .card-content {
+                padding: 24px;
+            }
+
+            .card-image-container {
+                height: 240px;
+            }
+        }
+
+        /* Focus states for accessibility */
+        .custom-checkbox input:focus + .checkmark {
+            outline: 2px solid var(--gold-accent);
+            outline-offset: 2px;
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--gold-accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+<form method="post" action="/states">
+    <div class="container">
+        <div class="header">
+            <h1>Choose Your Travel Destinations</h1>
+            <p>Select the states you'd like to explore and discover amazing places across India</p>
+        </div>
+
+        <% if (typeof states !== 'undefined' && states && states.length > 0) { %>
+            <div class="states-grid">
+                <% states.forEach(function(state, index) { %>
+                    <div class="state-card fade-in" style="animation-delay: <%= (index * 0.1).toFixed(2) %>s;">
+                        <div class="card-image-container">
+                            <img src="<%= state.image %>" 
+                                 alt="<%= state.name %>" 
+                                 class="card-image loading-shimmer"
+                                 onload="this.classList.remove('loading-shimmer'); this.classList.add('loaded')"
+                                 onerror="this.src='https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop'"
+                                 loading="lazy">
+                            <div class="image-overlay"></div>
+                            
+                            <div class="checkbox-overlay">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" 
+       name="selectedStates" 
+       value="<%= state._id || state.name %>"
+       data-state-name="<%= state.name %>"
+       onchange="updateSelection(event)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div class="popularity-badge 
+                                    <% if (state.popularity && state.popularity.toLowerCase() === 'high') { %>
+                                        popularity-high
+                                    <% } else if (state.popularity && state.popularity.toLowerCase() === 'medium') { %>
+                                        popularity-medium
+                                    <% } else { %>
+                                        popularity-low
+                                    <% } %>">
+                                    <%= state.popularity || 'Low' %> Popularity
+                                </div>
+                                
+                                <% if (state.climate) { %>
+    <div class="climate-badge 
+        <% if (state.climate.toLowerCase() === 'hot') { %>
+            climate-hot
+        <% } else if (state.climate.toLowerCase() === 'cold') { %>
+            climate-cold
+        <% } else if (state.climate.toLowerCase() === 'moderate') { %>  <!-- Fixed this line -->
+            climate-moderate
+        <% } else { %>
+            climate-varied
+        <% } %>">
+        <%= state.climate %>
+    </div>
+<% } %>
+                            </div>
+                            
+                            <h2 class="state-name"><%= state.name %></h2>
+                            
+                            <p class="state-description">
+                                <%= state.description || 'Discover the unique culture, history, and natural beauty of this incredible state.' %>
+                            </p>
+
+                            <div class="card-meta">
+                                <% if (state.bestTimeToVisit) { %>
+                                    <div class="best-time">
+                                        <div class="best-time-icon">📅</div>
+                                        <span><strong>Best Time:</strong> <%= state.bestTimeToVisit %></span>
+                                    </div>
+                                <% } %>
+
+                                <% if (state.tags && state.tags.length > 0) { %>
+                                    <div class="tags-container">
+                                        <% state.tags.forEach(function(tag) { %>
+                                            <span class="tag"><%= tag %></span>
+                                        <% }); %>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+
+            <div class="selection-summary" id="selectionSummary">
+                <div class="selected-count" id="selectedCount">
+                    0 destinations selected
+                </div>
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-clear" onclick="clearAllSelections()">
+                        Clear All
+                    </button>
+                    <button type="submit" class="btn btn-proceed" id="proceedBtn" onclick="proceedWithSelection()" disabled>
+                        Plan My Trip
+                    </button>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="no-states">
+                <h2>No destinations available</h2>
+                <p>Please check back later for amazing travel destinations.</p>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const selectionSummary = document.getElementById('selectionSummary');
+                    if (selectionSummary) {
+                        selectionSummary.style.display = 'none';
+                    }
+                });
+            </script>
+        <% } %>
+    </div>
+</form>
+
+    <script>
+    // Selection management
+    let selectedStates = [];
+
+    function updateSelection(e) {
+        if (e) e.stopPropagation();
+
+        const checkboxes = document.querySelectorAll('input[name="selectedStates"]:checked');
+        selectedStates = Array.from(checkboxes).map(cb => ({
+            id: cb.value,
+            name: cb.dataset.stateName
+        }));
+
+        updateSelectionUI();
+    }
+
+    function updateCardStates() {
+        document.querySelectorAll('.state-card').forEach(card => {
+            card.addEventListener('click', function (e) {
+                // Prevent toggling if click is inside checkbox or its label
+                if (e.target.closest('.custom-checkbox')) return;
+
+                const checkbox = card.querySelector('input[name="selectedStates"]');
+                checkbox.checked = !checkbox.checked;
+                updateSelection();
+            });
+        });
+    }
+
+    function updateSelectionUI() {
+        const count = selectedStates.length;
+        const summary = document.getElementById('selectionSummary');
+        const countElement = document.getElementById('selectedCount');
+        const proceedBtn = document.getElementById('proceedBtn');
+
+        if (summary) {
+            if (count > 0) {
+                summary.classList.add('show');
+                countElement.textContent = `${count} destination${count !== 1 ? 's' : ''} selected`;
+                proceedBtn.disabled = false;
+                proceedBtn.textContent = count === 1 ? 'Plan My Trip' : `Plan Trip to ${count} Places`;
+            } else {
+                summary.classList.remove('show');
+                proceedBtn.disabled = true;
+                proceedBtn.textContent = 'Plan My Trip';
+            }
+        }
+    }
+
+    function clearAllSelections() {
+        const checkboxes = document.querySelectorAll('input[name="selectedStates"]');
+        checkboxes.forEach(cb => cb.checked = false);
+        selectedStates = [];
+        updateSelectionUI();
+    }
+
+    function proceedWithSelection() {
+        if (selectedStates.length === 0) return;
+
+        console.log('Selected destinations:', selectedStates);
+        const stateNames = selectedStates.map(s => s.name).join(', ');
+        // Redirect or handle form submission as needed
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.documentElement.style.scrollBehavior = 'smooth';
+        updateSelection();
+        updateCardStates();
+
+        document.addEventListener('keydown', function (e) {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'a') {
+                    e.preventDefault();
+                    document.querySelectorAll('input[name="selectedStates"]').forEach(cb => cb.checked = true);
+                    updateSelection();
+                }
+            } else if (e.key === 'Escape') {
+                clearAllSelections();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
